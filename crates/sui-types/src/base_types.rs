@@ -2,8 +2,22 @@
 // Copyright (c) Mysten Labs, Inc.
 // SPDX-License-Identifier: Apache-2.0
 
+pub use crate::committee::EpochId;
+use crate::crypto::{
+    AuthorityPublicKey, AuthorityPublicKeyBytes, KeypairTraits, PublicKey, SuiPublicKey,
+};
+use crate::error::ExecutionError;
+use crate::error::ExecutionErrorKind;
+use crate::error::SuiError;
+use crate::gas_coin::GasCoin;
+use crate::object::{Object, Owner};
+use crate::sui_serde::HexObjectId;
+use crate::sui_serde::Readable;
+use crate::sui_serde::ToArray;
 use anyhow::anyhow;
 use fastcrypto::encoding::decode_bytes_hex;
+use fastcrypto::encoding::{Base58, Base64, Encoding, Hex};
+use fastcrypto::hash::{HashFunction, Sha3_256};
 use move_core_types::account_address::AccountAddress;
 use move_core_types::ident_str;
 use move_core_types::identifier::IdentStr;
@@ -18,20 +32,6 @@ use std::cmp::max;
 use std::convert::{TryFrom, TryInto};
 use std::fmt;
 use std::str::FromStr;
-
-pub use crate::committee::EpochId;
-use crate::crypto::{
-    AuthorityPublicKey, AuthorityPublicKeyBytes, KeypairTraits, PublicKey, SuiPublicKey,
-};
-use crate::error::ExecutionError;
-use crate::error::ExecutionErrorKind;
-use crate::error::SuiError;
-use crate::gas_coin::GasCoin;
-use crate::object::{Object, Owner};
-use crate::sui_serde::Readable;
-use fastcrypto::encoding::{Base58, Base64, Encoding, Hex};
-use fastcrypto::hash::{HashFunction, Sha3_256};
-
 #[cfg(test)]
 #[path = "unit_tests/base_types_tests.rs"]
 mod base_types_tests;
@@ -71,7 +71,7 @@ pub type AuthorityName = AuthorityPublicKeyBytes;
 #[derive(Eq, PartialEq, Clone, Copy, PartialOrd, Ord, Hash, Serialize, Deserialize, JsonSchema)]
 pub struct ObjectID(
     #[schemars(with = "Hex")]
-    #[serde_as(as = "Readable<Hex, _>")]
+    #[serde_as(as = "Readable<HexObjectId, _>")]
     AccountAddress,
 );
 
@@ -152,7 +152,7 @@ pub const SUI_ADDRESS_LENGTH: usize = ObjectID::LENGTH;
 )]
 pub struct SuiAddress(
     #[schemars(with = "Hex")]
-    #[serde_as(as = "Readable<Hex, _>")]
+    #[serde_as(as = "Readable<ToArray<Hex>, _>")]
     [u8; SUI_ADDRESS_LENGTH],
 );
 
@@ -284,7 +284,7 @@ pub const OBJECT_DIGEST_LENGTH: usize = 32;
 #[derive(Eq, PartialEq, Ord, PartialOrd, Copy, Clone, Hash, Serialize, Deserialize, JsonSchema)]
 pub struct TransactionDigest(
     #[schemars(with = "Base58")]
-    #[serde_as(as = "Readable<Base58, Bytes>")]
+    #[serde_as(as = "Readable<ToArray<Base58>, Bytes>")]
     [u8; TRANSACTION_DIGEST_LENGTH],
 );
 
@@ -293,7 +293,7 @@ pub struct TransactionDigest(
 #[derive(Eq, PartialEq, Ord, PartialOrd, Copy, Clone, Hash, Serialize, Deserialize, JsonSchema)]
 pub struct ObjectDigest(
     #[schemars(with = "Base64")]
-    #[serde_as(as = "Readable<Base64, Bytes>")]
+    #[serde_as(as = "Readable<ToArray<Base64>, Bytes>")]
     pub [u8; OBJECT_DIGEST_LENGTH],
 ); // We use SHA3-256 hence 32 bytes here
 
@@ -301,7 +301,7 @@ pub struct ObjectDigest(
 #[derive(Eq, PartialEq, Ord, PartialOrd, Copy, Clone, Hash, Serialize, Deserialize, JsonSchema)]
 pub struct TransactionEffectsDigest(
     #[schemars(with = "Base64")]
-    #[serde_as(as = "Readable<Base64, Bytes>")]
+    #[serde_as(as = "Readable<ToArray<Base64>, Bytes>")]
     pub [u8; TRANSACTION_DIGEST_LENGTH],
 );
 

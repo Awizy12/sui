@@ -1,10 +1,6 @@
 // Copyright (c) Mysten Labs, Inc.
 // SPDX-License-Identifier: Apache-2.0
 
-use fastcrypto::encoding::{Base58, Encoding, Hex};
-use std::fmt::{Debug, Display, Formatter};
-use std::slice::Iter;
-
 use crate::base_types::ExecutionDigests;
 use crate::committee::{EpochId, StakeUnit};
 use crate::crypto::{
@@ -13,16 +9,20 @@ use crate::crypto::{
 use crate::error::SuiResult;
 use crate::gas::GasCostSummary;
 use crate::sui_serde::Readable;
+use crate::sui_serde::ToArray;
 use crate::{
     base_types::AuthorityName,
     committee::Committee,
     crypto::{sha3_hash, AuthoritySignature, VerificationObligation},
     error::SuiError,
 };
+use fastcrypto::encoding::{Base58, Encoding, Hex};
 use schemars::JsonSchema;
 use serde::de::DeserializeOwned;
 use serde::{Deserialize, Serialize};
 use serde_with::{serde_as, Bytes};
+use std::fmt::{Debug, Display, Formatter};
+use std::slice::Iter;
 
 pub type CheckpointSequenceNumber = u64;
 pub type CheckpointTimestamp = u64;
@@ -61,7 +61,7 @@ pub struct CheckpointResponse {
 )]
 pub struct CheckpointDigest(
     #[schemars(with = "Base58")]
-    #[serde_as(as = "Readable<Base58, Bytes>")]
+    #[serde_as(as = "Readable<ToArray<Base58>, Bytes>")]
     pub [u8; 32],
 );
 
@@ -89,7 +89,7 @@ impl CheckpointDigest {
 )]
 pub struct CheckpointContentsDigest(
     #[schemars(with = "Base58")]
-    #[serde_as(as = "Readable<Base58, Bytes>")]
+    #[serde_as(as = "Readable<ToArray<Base58>, Bytes>")]
     pub [u8; 32],
 );
 
