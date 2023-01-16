@@ -43,7 +43,7 @@
 <b>use</b> <a href="">0x1::string</a>;
 <b>use</b> <a href="">0x1::vector</a>;
 <b>use</b> <a href="balance.md#0x2_balance">0x2::balance</a>;
-<b>use</b> <a href="bls12381.md#0x2_bls12381">0x2::bls12381</a>;
+<b>use</b> <a href="ed25519.md#0x2_ed25519">0x2::ed25519</a>;
 <b>use</b> <a href="epoch_time_lock.md#0x2_epoch_time_lock">0x2::epoch_time_lock</a>;
 <b>use</b> <a href="stake.md#0x2_stake">0x2::stake</a>;
 <b>use</b> <a href="staking_pool.md#0x2_staking_pool">0x2::staking_pool</a>;
@@ -286,7 +286,7 @@
     <b>let</b> address_bytes = <a href="_to_bytes">bcs::to_bytes</a>(&sui_address);
     <a href="_append">vector::append</a>(&<b>mut</b> signed_bytes, address_bytes);
     <b>assert</b>!(
-        bls12381_min_sig_verify_with_domain(&proof_of_possession, &pubkey_bytes, signed_bytes, <a href="validator.md#0x2_validator_PROOF_OF_POSSESSION_DOMAIN">PROOF_OF_POSSESSION_DOMAIN</a>) == <b>true</b>,
+        ed25519_verify_with_domain(&proof_of_possession, &pubkey_bytes, signed_bytes, <a href="validator.md#0x2_validator_PROOF_OF_POSSESSION_DOMAIN">PROOF_OF_POSSESSION_DOMAIN</a>) == <b>true</b>,
         0
     );
 }

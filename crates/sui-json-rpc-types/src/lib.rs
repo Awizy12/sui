@@ -1804,7 +1804,7 @@ impl TryFrom<CertifiedTransaction> for SuiCertifiedTransaction {
         let digest = *cert.digest();
         let (data, sig) = cert.into_data_and_sig();
         // We should always have a signature here.
-        if sig.signature.sig.is_none() {
+        if sig.signature.sigs.is_empty() {
             return Err(anyhow::anyhow!("Certified transaction is not signed"));
         }
         Ok(Self {
@@ -1860,7 +1860,7 @@ impl SuiCertifiedTransactionEffects {
         let digest = *cert.digest();
         let (effects, auth_sign_info) = cert.into_data_and_sig();
         // We should always have a signature here.
-        if auth_sign_info.signature.sig.is_none() {
+        if auth_sign_info.signature.sigs.is_empty() {
             return Err(anyhow::anyhow!("No quorum signature."));
         }
         Ok(Self {

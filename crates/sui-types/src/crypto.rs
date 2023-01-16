@@ -7,7 +7,7 @@ use fastcrypto::bls12381::min_sig::{
     BLS12381AggregateSignature, BLS12381AggregateSignatureAsBytes, BLS12381KeyPair,
     BLS12381PrivateKey, BLS12381PublicKey, BLS12381Signature,
 };
-use fastcrypto::ed25519::{Ed25519KeyPair, Ed25519PrivateKey, Ed25519PublicKey, Ed25519Signature};
+use fastcrypto::ed25519::{Ed25519AggregateSignature, Ed25519KeyPair, Ed25519PrivateKey, Ed25519PublicKey, Ed25519Signature, Ed25519AggregateSignatureAsBytes};
 use fastcrypto::secp256k1::{Secp256k1KeyPair, Secp256k1PublicKey, Secp256k1Signature};
 use fastcrypto::secp256r1::{Secp256r1KeyPair, Secp256r1PublicKey, Secp256r1Signature};
 pub use fastcrypto::traits::KeyPair as KeypairTraits;
@@ -47,12 +47,12 @@ use fastcrypto::error::FastCryptoError;
 mod crypto_tests;
 
 // Authority Objects
-pub type AuthorityKeyPair = BLS12381KeyPair;
-pub type AuthorityPublicKey = BLS12381PublicKey;
-pub type AuthorityPrivateKey = BLS12381PrivateKey;
-pub type AuthoritySignature = BLS12381Signature;
-pub type AggregateAuthoritySignature = BLS12381AggregateSignature;
-pub type AggregateAuthoritySignatureAsBytes = BLS12381AggregateSignatureAsBytes;
+pub type AuthorityKeyPair = Ed25519KeyPair;
+pub type AuthorityPublicKey = Ed25519PublicKey;
+pub type AuthorityPrivateKey = Ed25519PrivateKey;
+pub type AuthoritySignature = Ed25519Signature;
+pub type AggregateAuthoritySignature = Ed25519AggregateSignature;
+pub type AggregateAuthoritySignatureAsBytes = Ed25519AggregateSignatureAsBytes;
 
 // TODO(joyqvq): prefix these types with Default, DefaultAccountKeyPair etc
 pub type AccountKeyPair = Ed25519KeyPair;
