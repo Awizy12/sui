@@ -18,11 +18,11 @@ use narwhal_worker::TransactionValidator;
 use std::path::PathBuf;
 use std::sync::Arc;
 use std::time::Instant;
-use sui_types::crypto::NetworkKeyPair;
+use sui_types::crypto::{AuthorityKeyPair, NetworkKeyPair};
 use tokio::sync::Mutex;
 
 pub struct NarwhalConfiguration<TxValidator: TransactionValidator> {
-    pub primary_keypair: bls12381::min_sig::BLS12381KeyPair,
+    pub primary_keypair: AuthorityKeyPair,
     pub network_keypair: NetworkKeyPair,
     pub worker_ids_and_keypairs: Vec<(WorkerId, NetworkKeyPair)>,
 
@@ -35,7 +35,7 @@ pub struct NarwhalConfiguration<TxValidator: TransactionValidator> {
 
 pub struct NarwhalManager<TxValidator> {
     storage_base_path: PathBuf,
-    primary_keypair: bls12381::min_sig::BLS12381KeyPair,
+    primary_keypair: AuthorityKeyPair,
     network_keypair: NetworkKeyPair,
     worker_ids_and_keypairs: Vec<(WorkerId, NetworkKeyPair)>,
     primary_node: PrimaryNode,

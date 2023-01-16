@@ -199,8 +199,8 @@ event-listener = { version = "2", default-features = false }
 eyre = { version = "0.6" }
 fail-9fbad63c4bcf4a8f = { package = "fail", version = "0.4", default-features = false }
 fail-d8f496e17d97b5cb = { package = "fail", version = "0.5", default-features = false }
-fastcrypto = { git = "https://github.com/MystenLabs/fastcrypto", rev = "f451422b7f15e75e055a1830cbe5d1547fa87b74", features = ["copy_key"] }
-fastcrypto-zkp = { git = "https://github.com/MystenLabs/fastcrypto", rev = "f451422b7f15e75e055a1830cbe5d1547fa87b74", default-features = false }
+fastcrypto = { git = "https://github.com/MystenLabs/fastcrypto", rev = "9b21cf6fb77a8c66f6f36c4b0e67e37d550960f4", features = ["copy_key"] }
+fastcrypto-zkp = { git = "https://github.com/MystenLabs/fastcrypto", rev = "9b21cf6fb77a8c66f6f36c4b0e67e37d550960f4", default-features = false }
 fastrand = { version = "1", default-features = false }
 fd-lock = { version = "3", default-features = false }
 fdlimit = { version = "0.2", default-features = false }
@@ -510,6 +510,7 @@ semver-dff4ba8e3ae991db = { package = "semver", version = "1", features = ["serd
 send_wrapper = { version = "0.4", default-features = false }
 serde-c38e5c1d305a1b54 = { package = "serde", version = "0.8" }
 serde-dff4ba8e3ae991db = { package = "serde", version = "1", features = ["alloc", "derive", "rc"] }
+serde-big-array = { version = "0.4", default-features = false }
 serde-hjson = { version = "0.9", default-features = false }
 serde-name = { version = "0.2", default-features = false }
 serde-reflection = { version = "0.3", default-features = false }
@@ -612,7 +613,7 @@ tracing-subscriber-468e82937335b1c9 = { package = "tracing-subscriber", version 
 tracing-test = { version = "0.2", default-features = false }
 try-lock = { version = "0.2", default-features = false }
 tui = { version = "0.17" }
-twox-hash = { version = "1", default-features = false }
+twox-hash = { version = "1" }
 typed-arena = { version = "2" }
 typenum = { version = "1", default-features = false }
 ucd-trie = { version = "0.1", default-features = false, features = ["std"] }
@@ -878,9 +879,9 @@ event-listener = { version = "2", default-features = false }
 eyre = { version = "0.6" }
 fail-9fbad63c4bcf4a8f = { package = "fail", version = "0.4", default-features = false }
 fail-d8f496e17d97b5cb = { package = "fail", version = "0.5", default-features = false }
-fastcrypto = { git = "https://github.com/MystenLabs/fastcrypto", rev = "f451422b7f15e75e055a1830cbe5d1547fa87b74", features = ["copy_key"] }
-fastcrypto-derive = { git = "https://github.com/MystenLabs/fastcrypto", rev = "f451422b7f15e75e055a1830cbe5d1547fa87b74", default-features = false }
-fastcrypto-zkp = { git = "https://github.com/MystenLabs/fastcrypto", rev = "f451422b7f15e75e055a1830cbe5d1547fa87b74", default-features = false }
+fastcrypto = { git = "https://github.com/MystenLabs/fastcrypto", rev = "9b21cf6fb77a8c66f6f36c4b0e67e37d550960f4", features = ["copy_key"] }
+fastcrypto-derive = { git = "https://github.com/MystenLabs/fastcrypto", rev = "9b21cf6fb77a8c66f6f36c4b0e67e37d550960f4", default-features = false }
+fastcrypto-zkp = { git = "https://github.com/MystenLabs/fastcrypto", rev = "9b21cf6fb77a8c66f6f36c4b0e67e37d550960f4", default-features = false }
 fastrand = { version = "1", default-features = false }
 fd-lock = { version = "3", default-features = false }
 fdlimit = { version = "0.2", default-features = false }
@@ -1238,6 +1239,7 @@ semver-parser = { version = "0.10", default-features = false }
 send_wrapper = { version = "0.4", default-features = false }
 serde-c38e5c1d305a1b54 = { package = "serde", version = "0.8" }
 serde-dff4ba8e3ae991db = { package = "serde", version = "1", features = ["alloc", "derive", "rc"] }
+serde-big-array = { version = "0.4", default-features = false }
 serde-hjson = { version = "0.9", default-features = false }
 serde-name = { version = "0.2", default-features = false }
 serde-reflection = { version = "0.3", default-features = false }
@@ -1359,7 +1361,7 @@ tracing-test = { version = "0.2", default-features = false }
 tracing-test-macro = { version = "0.2", default-features = false }
 try-lock = { version = "0.2", default-features = false }
 tui = { version = "0.17" }
-twox-hash = { version = "1", default-features = false }
+twox-hash = { version = "1" }
 typed-arena = { version = "2" }
 typenum = { version = "1", default-features = false }
 ucd-trie = { version = "0.1", default-features = false, features = ["std"] }

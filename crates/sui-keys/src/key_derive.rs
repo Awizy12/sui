@@ -64,6 +64,9 @@ pub fn derive_key_pair_from_path(
         SignatureScheme::BLS12381 => Err(SuiError::UnsupportedFeatureError {
             error: "BLS12381 key derivation is currently not supported".to_string(),
         }),
+        SignatureScheme::Unsecure => Err(SuiError::UnsupportedFeatureError {
+            error: "Unsecure key derivation is currently not supported".to_string(),
+        }),
     }
 }
 
@@ -158,6 +161,9 @@ pub fn validate_path(
         }
         SignatureScheme::BLS12381 => Err(SuiError::UnsupportedFeatureError {
             error: "BLS12381 key derivation is currently not supported".to_string(),
+        }),
+        SignatureScheme::Unsecure => Err(SuiError::UnsupportedFeatureError {
+            error: "Unsecure key derivation is currently not supported".to_string(),
         }),
     }
 }
