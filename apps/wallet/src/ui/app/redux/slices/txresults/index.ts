@@ -77,7 +77,7 @@ const moveCallTxnName = (moveCallFunctionName?: string): string | null =>
 
 // TODO: move from redux to react-query
 // Get objectId from a transaction effects -> events where recipient is the address
-const getTxnEffectsEventID = (
+export const getTxnEffectsEventID = (
     txEffects: TransactionEffects,
     address: string
 ): string[] => {
