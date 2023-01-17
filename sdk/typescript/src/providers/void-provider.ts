@@ -36,6 +36,8 @@ import {
   TransactionEffects,
   CoinMetadata,
   DevInspectResults,
+  SuiSystemState,
+  CommitteeInfoResponse,
 } from '../types';
 import { Provider } from './provider';
 
@@ -52,6 +54,16 @@ export class VoidProvider extends Provider {
   // Governance
   async getReferenceGasPrice(): Promise<number> {
     throw this.newError('getReferenceGasPrice');
+  }
+
+  async getCommitteeInfo(
+    _epoch: number | null
+  ): Promise<CommitteeInfoResponse> {
+    throw this.newError('getCommitteeInfo');
+  }
+
+  async getSuiSystemState(): Promise<SuiSystemState> {
+    throw this.newError('getSuiSystemState');
   }
 
   // Faucet

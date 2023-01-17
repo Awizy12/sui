@@ -35,6 +35,8 @@ import {
   TransactionEffects,
   CoinMetadata,
   DevInspectResults,
+  SuiSystemState,
+  CommitteeInfoResponse,
 } from '../types';
 
 ///////////////////////////////
@@ -287,5 +289,11 @@ export abstract class Provider {
    * Getting the reference gas price for the network
    */
   abstract getReferenceGasPrice(): Promise<number>;
+
+  abstract getCommitteeInfo(
+    epoch: number | null
+  ): Promise<CommitteeInfoResponse>;
+  
+  abstract getSuiSystemState(): Promise<SuiSystemState>;
   // TODO: add more interface methods
 }

@@ -21,6 +21,9 @@ export const ValidatorMetaData = object({
   worker_pubkey_bytes: array(number()),
   proof_of_possession_bytes: array(number()),
   name: array(number()),
+  description: array(number()),
+  image_url: array(number()),
+  project_url: array(number()),
   net_address: array(number()),
   consensus_address: array(number()),
   worker_address: array(number()),
@@ -86,9 +89,9 @@ export const Parameters = object({
 });
 
 export const StakeSubsidyFields = object({
-  balance: string(),
-  current_epoch_amount: string(),
-  epoch_counter: string(),
+  balance: object({value: number()}),
+  current_epoch_amount: number(),
+  epoch_counter: number(),
 });
 
 export const StakeSubsidy = object({
@@ -97,7 +100,7 @@ export const StakeSubsidy = object({
 });
 
 export const SuiSupplyFields = object({
-  value: string(),
+  value: number(),
 });
 
 export const Supply = object({
@@ -137,8 +140,10 @@ export const NextEpochValidator = object({
 });
 
 export const ContentsFields = object({
-  id: ID,
-  size: string(),
+  // id: ID,
+  id: string(),
+  // size: string(),
+  size: number(),
 });
 
 export const Contents = object({
@@ -147,7 +152,7 @@ export const Contents = object({
 });
 
 export const PendingDelegationsFields = object({
-  contents: Contents,
+  contents: ContentsFields,
 });
 
 export const Pending = object({
@@ -156,12 +161,13 @@ export const Pending = object({
 });
 
 export const DelegationStakingPoolFields = object({
-  delegation_token_supply: Supply,
-  pending_delegations: Pending,
-  pending_withdraws: Pending,
-  rewards_pool: string(),
-  starting_epoch: string(),
-  sui_balance: string(),
+  delegation_token_supply: SuiSupplyFields,
+  pending_delegations: PendingDelegationsFields,
+  pending_withdraws: PendingDelegationsFields,
+  rewards_pool: object({value: number()}),
+  // rewards_pool: string(),
+  starting_epoch: number(),
+  sui_balance: number(),
   validator_address: string(),
 });
 
@@ -220,3 +226,52 @@ export const Validators = object({
   has_public_transfer: boolean(),
   fields: ValidatorsFields,
 });
+
+export const SystemParameters = object({
+  min_validator_stake: number(),
+  max_validator_candidate_count: number(),
+  storage_gas_price: number(),
+});
+
+export const Validator = object({
+  metadata: ValidatorMetaData,
+  voting_power: number(),
+  stake_amount: number(),
+  pending_stake: number(),
+  pending_withdraw: number(),
+  gas_price: number(),
+  delegation_staking_pool: DelegationStakingPoolFields,
+  commission_rate: number()
+});
+
+export const ValidatorPair = object({
+  from: SuiAddress,
+  to: SuiAddress,
+});
+
+export const ValidatorSet = object({
+  validator_stake: number(),
+  delegation_stake: number(),
+  total_voting_power: number(),
+  quorum_threshold: number(),
+  active_validators: array(Validator),
+  pending_validators: array(Validator),
+  pending_removals: array(number()),
+  next_epoch_validators: array(ValidatorMetaData),
+  pending_delegation_switches: object({contents: array(ValidatorPair)})
+});
+
+export const SuiSystemState = object({
+  info: object({id: string()}),
+  chain_id: number(),
+  epoch: number(),
+  validators: ValidatorSet,
+  treasury_cap: SuiSupplyFields,
+  storage_fund: Balance,
+  parameters: SystemParameters,
+  reference_gas_price: number(),
+  validator_report_records: object({contents: array()}),
+  stake_subsidy: StakeSubsidyFields,
+});
+
+export type SuiSystemState = Infer<typeof SuiSystemState>;

@@ -49,6 +49,8 @@ import {
   GetOwnedObjectsResponse,
   DelegatedStake,
   ValidatorMetaData,
+  SuiSystemState,
+  CommitteeInfoResponse,
 } from '../types';
 import {
   PublicKey,
@@ -761,7 +763,7 @@ export class JsonRpcProvider extends Provider {
     }
   }
 
-  async getDelegatedStake(address: SuiAddress): Promise<DelegatedStake[]> {
+  async getDelegatedStakes(address: SuiAddress): Promise<DelegatedStake[]> {
     try {
       if (!address || !isValidSuiAddress(normalizeSuiAddress(address))) {
         throw new Error('Invalid Sui address');
@@ -789,6 +791,34 @@ export class JsonRpcProvider extends Provider {
       return resp;
     } catch (err) {
       throw new Error(`Error in getValidators: ${err}`);
+    }
+  }
+
+  async getCommitteeInfo(epoch: number | null = null): Promise<CommitteeInfoResponse> {
+    try {
+      const resp = await this.client.requestWithType(
+        'sui_getCommitteeInfo',
+        [epoch],
+        CommitteeInfoResponse,
+        this.options.skipDataValidation
+      );
+      return resp;
+    } catch (err) {
+      throw new Error(`Error in getCommitteeInfo: ${err}`);
+    }
+  }
+
+  async getSuiSystemState(): Promise<SuiSystemState> {
+    try {
+      const resp = await this.client.requestWithType(
+        'sui_getSuiSystemState',
+        [],
+        SuiSystemState,
+        this.options.skipDataValidation
+      );
+      return resp;
+    } catch (err) {
+      throw new Error(`Error in getSuiSystemState: ${err}`);
     }
   }
 }
