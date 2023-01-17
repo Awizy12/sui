@@ -25,7 +25,11 @@ use move_bytecode_verifier::absint::{
 };
 use move_core_types::vm_status::StatusCode;
 use std::collections::BTreeMap;
-use sui_types::{error::ExecutionError, id::OBJECT_MODULE_NAME, SUI_FRAMEWORK_ADDRESS};
+use sui_types::{
+    error::{convert_vm_error, ExecutionError, NullResolver},
+    id::OBJECT_MODULE_NAME,
+    SUI_FRAMEWORK_ADDRESS,
+};
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 enum AbstractValue {
@@ -61,7 +65,10 @@ fn verify_id_leak(module: &CompiledModule) -> Result<(), ExecutionError> {
         let mut verifier = IDLeakAnalysis::new(&binary_view, &func_view);
         verifier
             .analyze_function(initial_state, &func_view)
-            .map_err(|e| e.finish(Location::Module(module.self_id())))?;
+            .map_err(|e| {
+                let err = e.finish(Location::Module(module.self_id()));
+                convert_vm_error(err, NullResolver)
+            })?;
     }
 
     Ok(())

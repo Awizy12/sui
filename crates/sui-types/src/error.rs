@@ -9,8 +9,15 @@ use crate::{
     messages_checkpoint::CheckpointSequenceNumber,
     object::Owner,
 };
-use move_binary_format::errors::{Location, PartialVMError, VMError};
-use move_core_types::vm_status::{StatusCode, StatusType};
+use move_binary_format::{
+    errors::{Location, PartialVMError, VMError},
+    file_format::FunctionDefinitionIndex,
+};
+use move_core_types::{
+    identifier::Identifier,
+    language_storage::ModuleId,
+    vm_status::{StatusCode, StatusType},
+};
 use narwhal_executor::SubscriberError;
 use serde::{Deserialize, Serialize};
 use std::{collections::BTreeMap, fmt::Debug};
@@ -719,69 +726,85 @@ impl From<ExecutionErrorKind> for ExecutionError {
     }
 }
 
-impl From<VMError> for ExecutionError {
-    fn from(error: VMError) -> Self {
-        let kind = match (error.major_status(), error.sub_status(), error.location()) {
-            (StatusCode::EXECUTED, _, _) => {
-                // If we have an error the status probably shouldn't ever be Executed
-                debug_assert!(false, "VmError shouldn't ever report successful execution");
-                ExecutionFailureStatus::VMInvariantViolation
+pub fn convert_vm_error(
+    error: VMError,
+    fname_resolver: impl FunctionNameResolver,
+) -> ExecutionError {
+    let kind = match (error.major_status(), error.sub_status(), error.location()) {
+        (StatusCode::EXECUTED, _, _) => {
+            // If we have an error the status probably shouldn't ever be Executed
+            debug_assert!(false, "VmError shouldn't ever report successful execution");
+            ExecutionFailureStatus::VMInvariantViolation
+        }
+        (StatusCode::ABORTED, None, _) => {
+            debug_assert!(false, "No abort code");
+            // this is a Move VM invariant violation, the code should always be there
+            ExecutionFailureStatus::VMInvariantViolation
+        }
+        (StatusCode::ABORTED, _, Location::Script) => {
+            debug_assert!(false, "Scripts are not used in Sui");
+            // this is a Move VM invariant violation, in the sense that the location
+            // is malformed
+            ExecutionFailureStatus::VMInvariantViolation
+        }
+        (StatusCode::ABORTED, Some(code), Location::Module(id)) => {
+            let offset = error.offsets().first().copied().map(|(f, i)| (f.0, i));
+            debug_assert!(offset.is_some(), "Move should set the location on aborts");
+            let (function, instruction) = offset.unwrap_or((0, 0));
+            ExecutionFailureStatus::MoveAbort(
+                MoveLocation {
+                    module: id.clone(),
+                    function,
+                    instruction,
+                    function_name: fname_resolver
+                        .resolve(id, FunctionDefinitionIndex::new(function))
+                        .map(Identifier::into_string),
+                },
+                code,
+            )
+        }
+        (StatusCode::OUT_OF_GAS, _, _) => ExecutionFailureStatus::InsufficientGas,
+        (_, _, location) => match error.major_status().status_type() {
+            StatusType::Execution => {
+                debug_assert!(error.major_status() != StatusCode::ABORTED);
+                let location = match location {
+                    Location::Module(id) => {
+                        let offset = error.offsets().first().copied().map(|(f, i)| (f.0, i));
+                        debug_assert!(
+                            offset.is_some(),
+                            "Move should set the location on all execution errors"
+                        );
+                        let (function, instruction) = offset.unwrap_or((0, 0));
+                        Some(MoveLocation {
+                            module: id.clone(),
+                            function,
+                            instruction,
+                            function_name: fname_resolver
+                                .resolve(id, FunctionDefinitionIndex::new(function))
+                                .map(Identifier::into_string),
+                        })
+                    }
+                    _ => None,
+                };
+                ExecutionFailureStatus::MovePrimitiveRuntimeError(location)
             }
-            (StatusCode::ABORTED, None, _) => {
-                debug_assert!(false, "No abort code");
-                // this is a Move VM invariant violation, the code should always be there
-                ExecutionFailureStatus::VMInvariantViolation
-            }
-            (StatusCode::ABORTED, _, Location::Script) => {
-                debug_assert!(false, "Scripts are not used in Sui");
-                // this is a Move VM invariant violation, in the sense that the location
-                // is malformed
-                ExecutionFailureStatus::VMInvariantViolation
-            }
-            (StatusCode::ABORTED, Some(code), Location::Module(id)) => {
-                let offset = error.offsets().first().copied().map(|(f, i)| (f.0, i));
-                debug_assert!(offset.is_some(), "Move should set the location on aborts");
-                let (function, instruction) = offset.unwrap_or((0, 0));
-                ExecutionFailureStatus::MoveAbort(
-                    MoveLocation {
-                        module: id.clone(),
-                        function,
-                        instruction,
-                    },
-                    code,
-                )
-            }
-            (StatusCode::OUT_OF_GAS, _, _) => ExecutionFailureStatus::InsufficientGas,
-            (_, _, location) => match error.major_status().status_type() {
-                StatusType::Execution => {
-                    debug_assert!(error.major_status() != StatusCode::ABORTED);
-                    let location = match location {
-                        Location::Module(id) => {
-                            let offset = error.offsets().first().copied().map(|(f, i)| (f.0, i));
-                            debug_assert!(
-                                offset.is_some(),
-                                "Move should set the location on all execution errors"
-                            );
-                            let (function, instruction) = offset.unwrap_or((0, 0));
-                            Some(MoveLocation {
-                                module: id.clone(),
-                                function,
-                                instruction,
-                            })
-                        }
-                        _ => None,
-                    };
-                    ExecutionFailureStatus::MovePrimitiveRuntimeError(location)
-                }
-                StatusType::Validation
-                | StatusType::Verification
-                | StatusType::Deserialization
-                | StatusType::Unknown => {
-                    ExecutionFailureStatus::VMVerificationOrDeserializationError
-                }
-                StatusType::InvariantViolation => ExecutionFailureStatus::VMInvariantViolation,
-            },
-        };
-        Self::new_with_source(kind, error)
+            StatusType::Validation
+            | StatusType::Verification
+            | StatusType::Deserialization
+            | StatusType::Unknown => ExecutionFailureStatus::VMVerificationOrDeserializationError,
+            StatusType::InvariantViolation => ExecutionFailureStatus::VMInvariantViolation,
+        },
+    };
+    ExecutionError::new_with_source(kind, error)
+}
+
+pub trait FunctionNameResolver {
+    fn resolve(&self, m: &ModuleId, idx: FunctionDefinitionIndex) -> Option<Identifier>;
+}
+
+pub struct NullResolver;
+impl FunctionNameResolver for NullResolver {
+    fn resolve(&self, _: &ModuleId, _: FunctionDefinitionIndex) -> Option<Identifier> {
+        None
     }
 }

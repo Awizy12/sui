@@ -15,8 +15,8 @@ use move_binary_format::{
     binary_views::BinaryIndexedView,
     errors::{VMError, VMResult},
     file_format::{
-        AbilitySet, CompiledModule, FunctionHandleIndex, LocalIndex, SignatureToken,
-        StructHandleIndex, TypeParameterIndex,
+        AbilitySet, CompiledModule, FunctionDefinitionIndex, FunctionHandleIndex, LocalIndex,
+        SignatureToken, StructHandleIndex, TypeParameterIndex,
     },
 };
 use move_bytecode_verifier::VerifierConfig;
@@ -24,7 +24,7 @@ use move_core_types::{
     account_address::AccountAddress,
     identifier::{IdentStr, Identifier},
     language_storage::{ModuleId, StructTag, TypeTag},
-    resolver::{ModuleResolver, ResourceResolver},
+    resolver::{ModuleResolver, MoveResolver, ResourceResolver},
     value::{MoveStruct, MoveTypeLayout, MoveValue},
 };
 pub use move_vm_runtime::move_vm::MoveVM;
@@ -39,16 +39,16 @@ use sui_cost_tables::bytecode_tables::GasStatus;
 use sui_framework::natives::object_runtime::{self, ObjectRuntime};
 use sui_json::primitive_type;
 use sui_protocol_constants::*;
-use sui_types::storage::SingleTxContext;
 use sui_types::{
     base_types::*,
-    error::ExecutionError,
+    error::{ExecutionError, FunctionNameResolver, NullResolver},
     error::{ExecutionErrorKind, SuiError},
     event::Event,
     messages::{CallArg, EntryArgumentErrorKind, InputObjectKind, ObjectArg},
     object::{self, Data, MoveObject, Object, Owner, ID_END_INDEX},
     storage::{ChildObjectResolver, DeleteKind, ObjectChange, ParentSync, Storage, WriteKind},
 };
+use sui_types::{error::convert_vm_error, storage::SingleTxContext};
 use sui_verifier::{
     entry_points_verifier::{is_tx_context, TxContextKind, RESOLVED_ASCII_STR, RESOLVED_UTF8_STR},
     verifier, INIT_FN_NAME,
@@ -147,7 +147,9 @@ pub fn execute<
         }
     }
 
-    let module = vm.load_module(&module_id, state_view)?;
+    let module = vm
+        .load_module(&module_id, state_view)
+        .map_err(|e| convert_vm_error(e, NullResolver))?;
     let is_genesis = ctx.digest() == TransactionDigest::genesis();
     let TypeCheckSuccess {
         module_id,
@@ -214,16 +216,20 @@ fn execute_internal<
             .map_err(|e| convert_type_argument_error(idx, e))?;
     }
     // script visibility checked manually for entry points
-    let result = session.execute_function_bypass_visibility(
-        module_id,
-        function,
-        type_args.clone(),
-        args,
-        gas_status,
-    )?;
+    let result = session
+        .execute_function_bypass_visibility(
+            module_id,
+            function,
+            type_args.clone(),
+            args,
+            gas_status,
+        )
+        .map_err(|e| convert_vm_error(e, VMResolver { vm, state_view }))?;
     let mode_result = Mode::make_result(&session, module_id, function, &type_args, &result)?;
 
-    let (change_set, events, mut native_context_extensions) = session.finish_with_extensions()?;
+    let (change_set, events, mut native_context_extensions) = session
+        .finish_with_extensions()
+        .map_err(|e| convert_vm_error(e, VMResolver { vm, state_view }))?;
     let SerializedReturnValues {
         mut mutable_reference_outputs,
         ..
@@ -290,7 +296,8 @@ fn execute_internal<
             let bytes = value.simple_serialize(&layout).unwrap();
             Ok((id, (write_kind, owner, tag, abilities, bytes)))
         })
-        .collect::<VMResult<_>>()?;
+        .collect::<VMResult<_>>()
+        .map_err(|e| convert_vm_error(e, VMResolver { vm, state_view }))?;
     let user_events = user_events
         .into_iter()
         .map(|(_ty, tag, value)| {
@@ -298,8 +305,11 @@ fn execute_internal<
             let bytes = value.simple_serialize(&layout).unwrap();
             Ok((tag, bytes))
         })
-        .collect::<VMResult<_>>()?;
-    let (empty_changes, empty_events) = session.finish()?;
+        .collect::<VMResult<_>>()
+        .map_err(|e| convert_vm_error(e, VMResolver { vm, state_view }))?;
+    let (empty_changes, empty_events) = session
+        .finish()
+        .map_err(|e| convert_vm_error(e, VMResolver { vm, state_view }))?;
     debug_assert!(empty_changes.into_inner().is_empty());
     debug_assert!(empty_events.is_empty());
     process_successful_execution(
@@ -337,7 +347,8 @@ pub fn publish<
             CompiledModule::deserialize(b)
                 .map_err(|e| e.finish(move_binary_format::errors::Location::Undefined))
         })
-        .collect::<move_binary_format::errors::VMResult<Vec<CompiledModule>>>()?;
+        .collect::<move_binary_format::errors::VMResult<Vec<CompiledModule>>>()
+        .map_err(|e| convert_vm_error(e, NullResolver))?;
 
     if modules.is_empty() {
         return Err(ExecutionErrorKind::PublishErrorEmptyPackage.into());
@@ -411,7 +422,9 @@ fn init_modules<
 ) -> Result<(), ExecutionError> {
     let init_ident = Identifier::new(INIT_FN_NAME.as_str()).unwrap();
     for (module_id, fhandle_idx) in module_ids_to_init {
-        let module = vm.load_module(&module_id, state_view)?;
+        let module = vm
+            .load_module(&module_id, state_view)
+            .map_err(|e| convert_vm_error(e, VMResolver { vm, state_view }))?;
         let view = &BinaryIndexedView::Module(&module);
         let fhandle = module.function_handle_at(fhandle_idx);
         let parameters = &module.signature_at(fhandle.parameters).0;
@@ -477,13 +490,15 @@ pub fn verify_and_link<
             bytes
         })
         .collect();
-    session.publish_module_bundle(
-        new_module_bytes,
-        AccountAddress::from(package_id),
-        // TODO: publish_module_bundle() currently doesn't charge gas.
-        // Do we want to charge there?
-        gas_status,
-    )?;
+    session
+        .publish_module_bundle(
+            new_module_bytes,
+            AccountAddress::from(package_id),
+            // TODO: publish_module_bundle() currently doesn't charge gas.
+            // Do we want to charge there?
+            gas_status,
+        )
+        .map_err(|e| convert_vm_error(e, NullResolver))?;
 
     // run the Sui verifier
     for module in modules.iter() {
@@ -1353,7 +1368,22 @@ fn convert_type_argument_error(idx: usize, error: VMError) -> ExecutionError {
         StatusCode::TYPE_RESOLUTION_FAILURE => EntryTypeArgumentErrorKind::TypeNotFound,
         StatusCode::NUMBER_OF_TYPE_ARGUMENTS_MISMATCH => EntryTypeArgumentErrorKind::ArityMismatch,
         StatusCode::CONSTRAINT_NOT_SATISFIED => EntryTypeArgumentErrorKind::ConstraintNotSatisfied,
-        _ => return error.into(),
+        _ => return convert_vm_error(error, NullResolver),
     };
     ExecutionErrorKind::entry_type_argument_error(idx as TypeParameterIndex, kind).into()
+}
+
+struct VMResolver<'vm, M: MoveResolver> {
+    vm: &'vm MoveVM,
+    state_view: &'vm M,
+}
+
+impl<M: MoveResolver> FunctionNameResolver for VMResolver<'_, M> {
+    fn resolve(&self, m: &ModuleId, idx: FunctionDefinitionIndex) -> Option<Identifier> {
+        let module = self.vm.load_module(m, self.state_view).ok()?;
+        let fdef = module.function_def_at(idx);
+        let fhandle = module.function_handle_at(fdef.function);
+        let fname = module.identifier_at(fhandle.name);
+        Some(fname.to_owned())
+    }
 }

@@ -1475,6 +1475,7 @@ pub struct MoveLocation {
     pub module: ModuleId,
     pub function: u16,
     pub instruction: CodeOffset,
+    pub function_name: Option<String>,
 }
 
 #[derive(Eq, PartialEq, Clone, Copy, Debug, Serialize, Deserialize, Hash)]
@@ -1706,11 +1707,16 @@ impl Display for MoveLocation {
             module,
             function,
             instruction,
+            function_name,
         } = self;
-        write!(
-            f,
-            "{module} in function definition {function} at offset {instruction}"
-        )
+        if let Some(fname) = function_name {
+            write!(f, "{module} in function {fname} at offset {instruction}")
+        } else {
+            write!(
+                f,
+                "{module} in function definition {function} at offset {instruction}"
+            )
+        }
     }
 }
 
