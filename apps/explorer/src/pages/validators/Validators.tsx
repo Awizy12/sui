@@ -18,6 +18,7 @@ import { Card } from '~/ui/Card';
 import { Heading } from '~/ui/Heading';
 import { ImageIcon } from '~/ui/ImageIcon';
 import { ValidatorLink } from '~/ui/InternalLink';
+import { Link } from '~/ui/Link';
 import { PlaceholderTable } from '~/ui/PlaceholderTable';
 import { Stats } from '~/ui/Stats';
 import { TableCard } from '~/ui/TableCard';
@@ -26,6 +27,7 @@ import { Text } from '~/ui/Text';
 import { getName } from '~/utils/getName';
 
 const ValidatorMap = lazy(() => import('../../components/node-map'));
+const APY_DECIMALS = 4;
 
 function ValidatorPageResult() {
     const { data, isLoading, isSuccess, isError } =
@@ -47,9 +49,11 @@ function ValidatorPageResult() {
         const validatorsApy = validators.map((av) =>
             calculateAPY(av, +validatorsData.epoch)
         );
-        return (
-            validatorsApy.reduce((acc, cur) => acc + cur, 0) /
-            validatorsApy.length
+        return parseFloat(
+            (
+                validatorsApy.reduce((acc, cur) => acc + cur, 0) /
+                validatorsApy.length
+            ).toFixed(APY_DECIMALS)
         );
     }, [validatorsData]);
 
@@ -77,12 +81,14 @@ function ValidatorPageResult() {
                                 fallback={validatorName}
                                 circle
                             />
-                            <Text
-                                variant="bodySmall/medium"
-                                color="steel-darker"
+
+                            <Link
+                                to={`/validator/${encodeURIComponent(
+                                    validator.fields.metadata.fields.sui_address
+                                )}`}
                             >
                                 {validatorName}
-                            </Text>
+                            </Link>
                         </div>
                     ),
                     stake: (
