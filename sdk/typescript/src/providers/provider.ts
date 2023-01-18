@@ -37,6 +37,8 @@ import {
   DevInspectResults,
   SuiSystemState,
   CommitteeInfoResponse,
+  DelegatedStake,
+  ValidatorMetaData
 } from '../types';
 
 ///////////////////////////////
@@ -289,6 +291,10 @@ export abstract class Provider {
    * Getting the reference gas price for the network
    */
   abstract getReferenceGasPrice(): Promise<number>;
+
+  abstract getDelegatedStakes(address: SuiAddress): Promise<DelegatedStake[]>;
+
+  abstract getValidators(): Promise<ValidatorMetaData[]>;
 
   abstract getCommitteeInfo(
     epoch: number | null

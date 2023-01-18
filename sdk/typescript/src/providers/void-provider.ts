@@ -38,6 +38,8 @@ import {
   DevInspectResults,
   SuiSystemState,
   CommitteeInfoResponse,
+  DelegatedStake,
+  ValidatorMetaData,
 } from '../types';
 import { Provider } from './provider';
 
@@ -64,6 +66,14 @@ export class VoidProvider extends Provider {
 
   async getSuiSystemState(): Promise<SuiSystemState> {
     throw this.newError('getSuiSystemState');
+  }
+
+  async getDelegatedStakes(_address: SuiAddress): Promise<DelegatedStake[]> {
+    throw this.newError('getDelegatedStakes');
+  }
+
+  async getValidators(): Promise<ValidatorMetaData[]> {
+    throw this.newError('getValidators');
   }
 
   // Faucet
