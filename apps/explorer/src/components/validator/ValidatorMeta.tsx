@@ -1,10 +1,8 @@
 // Copyright (c) Mysten Labs, Inc.
 // SPDX-License-Identifier: Apache-2.0
 
-import { Base64DataBuffer } from '@mysten/sui.js';
+import { Base64DataBuffer, type ActiveValidator } from '@mysten/sui.js';
 import { useMemo } from 'react';
-
-import type { ActiveValidator } from '~/pages/validator/ValidatorDataTypes';
 
 import { DescriptionList, DescriptionItem } from '~/ui/DescriptionList';
 import { Heading } from '~/ui/Heading';
