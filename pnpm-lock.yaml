@@ -30,7 +30,7 @@ importers:
   apps/explorer:
     specifiers:
       '@babel/core': ^7.20.12
-      '@floating-ui/react-dom-interactions': ^0.13.3
+      '@floating-ui/react': ^0.18.0
       '@fontsource/inter': ^4.5.14
       '@fontsource/red-hat-mono': ^4.5.11
       '@growthbook/growthbook': ^0.20.1
@@ -87,7 +87,7 @@ importers:
       react: ^18.2.0
       react-dom: ^18.2.0
       react-error-boundary: ^3.1.4
-      react-hook-form: ^7.41.5
+      react-hook-form: ^7.42.1
       react-hot-toast: ^2.4.0
       react-router-dom: ^6.5.0
       start-server-and-test: ^1.15.2
@@ -106,13 +106,13 @@ importers:
       web-vitals: ^3.1.0
       zod: ^3.20.2
     dependencies:
-      '@floating-ui/react-dom-interactions': 0.13.3_ib3m5ricvtkl2cll7qpr2f6lvq
+      '@floating-ui/react': 0.18.0_ib3m5ricvtkl2cll7qpr2f6lvq
       '@fontsource/inter': 4.5.14
       '@fontsource/red-hat-mono': 4.5.11
       '@growthbook/growthbook': 0.20.1
       '@growthbook/growthbook-react': 0.10.1_react@18.2.0
       '@headlessui/react': 1.7.7_biqbaboplfbrettd7655fr4n2y
-      '@hookform/resolvers': 2.9.10_react-hook-form@7.41.5
+      '@hookform/resolvers': 2.9.10_react-hook-form@7.42.1
       '@mysten/core': link:../core
       '@mysten/icons': link:../icons
       '@mysten/sui.js': link:../../sdk/typescript
@@ -136,7 +136,7 @@ importers:
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
       react-error-boundary: 3.1.4_react@18.2.0
-      react-hook-form: 7.41.5_react@18.2.0
+      react-hook-form: 7.42.1_react@18.2.0
       react-hot-toast: 2.4.0_biqbaboplfbrettd7655fr4n2y
       react-router-dom: 6.6.2_biqbaboplfbrettd7655fr4n2y
       topojson-client: 3.1.0
@@ -204,7 +204,7 @@ importers:
     specifiers:
       '@babel/preset-env': ^7.20.2
       '@babel/preset-typescript': ^7.18.6
-      '@floating-ui/react-dom-interactions': ^0.13.3
+      '@floating-ui/react': ^0.18.0
       '@fontsource/inter': ^4.5.14
       '@fontsource/red-hat-mono': ^4.5.11
       '@growthbook/growthbook': ^0.20.1
@@ -312,7 +312,7 @@ importers:
       yup: ^0.32.11
       zxcvbn: ^4.4.2
     dependencies:
-      '@floating-ui/react-dom-interactions': 0.13.3_ib3m5ricvtkl2cll7qpr2f6lvq
+      '@floating-ui/react': 0.18.0_ib3m5ricvtkl2cll7qpr2f6lvq
       '@fontsource/inter': 4.5.14
       '@fontsource/red-hat-mono': 4.5.11
       '@growthbook/growthbook': 0.20.1
@@ -445,7 +445,7 @@ importers:
       react: ^18.2.0
       react-dom: ^18.2.0
       react-error-boundary: ^3.1.4
-      react-hook-form: ^7.41.5
+      react-hook-form: ^7.42.1
       react-hot-toast: ^2.4.0
       react-router-dom: ^6.6.2
       tailwindcss: ^3.2.4
@@ -455,7 +455,7 @@ importers:
     dependencies:
       '@fontsource/inter': 4.5.14
       '@headlessui/react': 1.7.7_biqbaboplfbrettd7655fr4n2y
-      '@hookform/resolvers': 2.9.10_react-hook-form@7.41.5
+      '@hookform/resolvers': 2.9.10_react-hook-form@7.42.1
       '@mysten/core': link:../../apps/core
       '@mysten/icons': link:../../apps/icons
       '@mysten/sui.js': link:../../sdk/typescript
@@ -468,7 +468,7 @@ importers:
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
       react-error-boundary: 3.1.4_react@18.2.0
-      react-hook-form: 7.41.5_react@18.2.0
+      react-hook-form: 7.42.1_react@18.2.0
       react-hot-toast: 2.4.0_biqbaboplfbrettd7655fr4n2y
       react-router-dom: 6.6.2_biqbaboplfbrettd7655fr4n2y
       zod: 3.20.2
@@ -3722,24 +3722,8 @@ packages:
       '@floating-ui/core': 1.1.0
     dev: false
 
-  /@floating-ui/react-dom-interactions/0.13.3_ib3m5ricvtkl2cll7qpr2f6lvq:
-    resolution: {integrity: sha512-AnCW06eIZxzD/Hl1Qbi2JkQRU5KpY7Dn81k3xRfbvs+HylhB+t3x88/GNKLK39mMTlJ/ylxm5prUpiLrTWvifQ==}
-    deprecated: Package renamed to @floating-ui/react
-    peerDependencies:
-      react: '>=16.8.0'
-      react-dom: '>=16.8.0'
-    dependencies:
-      '@floating-ui/react-dom': 1.1.1_biqbaboplfbrettd7655fr4n2y
-      aria-hidden: 1.2.2_kzbn2opkn2327fwg5yzwzya5o4
-      react: 18.2.0
-      react-dom: 18.2.0_react@18.2.0
-      tabbable: 6.0.1
-    transitivePeerDependencies:
-      - '@types/react'
-    dev: false
-
-  /@floating-ui/react-dom/1.1.1_biqbaboplfbrettd7655fr4n2y:
-    resolution: {integrity: sha512-F27E+7SLB5NZvwF9Egqx/PlvxOhMnA6k/yNMQUqaQ9BPZdr4fQgSW6J6AKNIrBQElBT8IRDtv9j6h7FDkgp3dA==}
+  /@floating-ui/react-dom/1.2.1_biqbaboplfbrettd7655fr4n2y:
+    resolution: {integrity: sha512-YCLlqibZtgUhxUpxkSp1oekvYgH/jI4KdZEJv85E62twlZHN43xdlQNe6JcF4ROD3/Zu6juNHN+aOygN+6yZjg==}
     peerDependencies:
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
@@ -3747,6 +3731,21 @@ packages:
       '@floating-ui/dom': 1.1.0
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
+    dev: false
+
+  /@floating-ui/react/0.18.0_ib3m5ricvtkl2cll7qpr2f6lvq:
+    resolution: {integrity: sha512-zxgwWigxaph1TIBdezCDdc3eo+4FUDKY2MiBR3gywZtx5Eeb0KBRRZ9PyzznTXuYO5Y9BFHAC0Yikqp7rr+oKQ==}
+    peerDependencies:
+      react: '>=16.8.0'
+      react-dom: '>=16.8.0'
+    dependencies:
+      '@floating-ui/react-dom': 1.2.1_biqbaboplfbrettd7655fr4n2y
+      aria-hidden: 1.2.2_kzbn2opkn2327fwg5yzwzya5o4
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+      tabbable: 6.0.1
+    transitivePeerDependencies:
+      - '@types/react'
     dev: false
 
   /@fontsource/inter/4.5.14:
@@ -3897,12 +3896,12 @@ packages:
       tailwindcss: 3.2.4
     dev: true
 
-  /@hookform/resolvers/2.9.10_react-hook-form@7.41.5:
+  /@hookform/resolvers/2.9.10_react-hook-form@7.42.1:
     resolution: {integrity: sha512-JIL1DgJIlH9yuxcNGtyhsWX/PgNltz+5Gr6+8SX9fhXc/hPbEIk6wPI82nhgvp3uUb6ZfAM5mqg/x7KR7NAb+A==}
     peerDependencies:
       react-hook-form: ^7.0.0
     dependencies:
-      react-hook-form: 7.41.5_react@18.2.0
+      react-hook-form: 7.42.1_react@18.2.0
     dev: false
 
   /@httptoolkit/httpolyglot/2.0.1:
@@ -5309,7 +5308,7 @@ packages:
       '@storybook/core-events': 7.0.0-beta.3
       '@storybook/csf': 0.0.2-next.8
       '@storybook/csf-tools': 7.0.0-beta.3
-      '@storybook/docs-mdx': 0.0.1-next.5
+      '@storybook/docs-mdx': 0.0.1-next.6
       '@storybook/node-logger': 7.0.0-beta.3
       '@storybook/preview-api': 7.0.0-beta.3
       '@storybook/telemetry': 7.0.0-beta.3_typescript@4.9.4
@@ -5395,8 +5394,8 @@ packages:
       type-fest: 2.19.0
     dev: true
 
-  /@storybook/docs-mdx/0.0.1-next.5:
-    resolution: {integrity: sha512-EowXFPq4TBZQguKCdU8y7EzpuSv2vSu5gy7pgF/1P5mq7LG9h8YIrerOW9DL4zfp9E0GHIWlSXR5KuFIqqKc/Q==}
+  /@storybook/docs-mdx/0.0.1-next.6:
+    resolution: {integrity: sha512-DjoSIXADmLJtdroXAjUotFiZlcZ2usWhqrS7aeOtZs0DVR0Ws5WQjnwtpDUXt8gryTSd+OZJ0cNsDcqg4JDEvQ==}
     dev: true
 
   /@storybook/docs-tools/7.0.0-beta.3_typescript@4.9.4:
@@ -15530,8 +15529,8 @@ packages:
     resolution: {integrity: sha512-suNP+J1VU1MWFKcyt7RtjiSWUjvidmQSlqu+eHslq+342xCbGTYmC0mEhPCOHxlW0CywylOC1u2DFAT+bv4dBw==}
     dev: false
 
-  /react-hook-form/7.41.5_react@18.2.0:
-    resolution: {integrity: sha512-DAKjSJ7X9f16oQrP3TW2/eD9N6HOgrmIahP4LOdFphEWVfGZ2LulFd6f6AQ/YS/0cx/5oc4j8a1PXxuaurWp/Q==}
+  /react-hook-form/7.42.1_react@18.2.0:
+    resolution: {integrity: sha512-2UIGqwMZksd5HS55crTT1ATLTr0rAI4jS7yVuqTaoRVDhY2Qc4IyjskCmpnmdYqUNOYFy04vW253tb2JRVh+IQ==}
     engines: {node: '>=12.22.0'}
     peerDependencies:
       react: ^16.8.0 || ^17 || ^18

@@ -15,7 +15,7 @@ import {
     offset,
     shift,
     useFloating,
-} from '@floating-ui/react-dom-interactions';
+} from '@floating-ui/react';
 import { Popover } from '@headlessui/react';
 import clsx from 'clsx';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -105,6 +105,8 @@ function CustomRPCInput({
         },
     });
 
+    const { isValid, isDirty } = formState;
+
     return (
         <form
             onSubmit={handleSubmit((values) => {
@@ -125,7 +127,7 @@ function CustomRPCInput({
 
             <div className="absolute inset-y-0 right-0 flex flex-col justify-center px-3">
                 <button
-                    disabled={!formState.isDirty || !formState.isValid}
+                    disabled={!isDirty || !isValid}
                     type="submit"
                     className="flex items-center justify-center rounded-full border-0 bg-gray-90 px-2 py-1 text-captionSmall font-semibold uppercase text-white transition disabled:bg-gray-45 disabled:text-gray-65"
                 >
