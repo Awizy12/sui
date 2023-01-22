@@ -26,7 +26,6 @@ module.exports = {
             },
             borderRadius: {
                 '2lg': '0.625rem',
-                15: '0.9375rem',
             },
             boxShadow: {
                 notification: '0px 0px 20px rgba(29, 55, 87, 0.11)',
