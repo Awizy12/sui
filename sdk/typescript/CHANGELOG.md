@@ -1,5 +1,15 @@
 # @mysten/sui.js
 
+## 0.24.0
+
+### Minor Changes
+
+- 88a687834: Add methods for the CoinRead endpoints
+
+### Patch Changes
+
+- 89091ddab: change estimator logic to use upper bound
+
 ## 0.23.0
 
 ### Minor Changes
