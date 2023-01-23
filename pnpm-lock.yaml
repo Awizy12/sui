@@ -211,6 +211,7 @@ importers:
       '@growthbook/growthbook-react': ^0.10.1
       '@metamask/browser-passworder': ^4.0.2
       '@mysten/core': workspace:*
+      '@mysten/icons': workspace:*
       '@mysten/sui.js': workspace:*
       '@mysten/wallet-standard': workspace:*
       '@noble/hashes': ^1.1.5
@@ -319,6 +320,7 @@ importers:
       '@growthbook/growthbook-react': 0.10.1_react@18.2.0
       '@metamask/browser-passworder': 4.0.2
       '@mysten/core': link:../core
+      '@mysten/icons': link:../icons
       '@mysten/sui.js': link:../../sdk/typescript
       '@mysten/wallet-standard': link:../../sdk/wallet-adapter/wallet-standard
       '@noble/hashes': 1.1.5
@@ -347,7 +349,7 @@ importers:
       rxjs: 7.8.0
       semver: 7.3.8
       stream-browserify: 3.0.0
-      tailwindcss: 3.2.4_ts-node@10.9.1
+      tailwindcss: 3.2.4_aesdjsunmf4wiehhujt67my7tu
       throttle-debounce: 5.0.0
       tweetnacl: 1.0.3
       uuid: 8.3.2
@@ -4713,7 +4715,7 @@ packages:
       '@storybook/components': 7.0.0-beta.3_biqbaboplfbrettd7655fr4n2y
       '@storybook/csf-plugin': 7.0.0-beta.3
       '@storybook/csf-tools': 7.0.0-beta.3
-      '@storybook/mdx2-csf': 1.0.0-next.4
+      '@storybook/mdx2-csf': 1.0.0-next.5
       '@storybook/node-logger': 7.0.0-beta.3
       '@storybook/postinstall': 7.0.0-beta.3
       '@storybook/preview-api': 7.0.0-beta.3
@@ -5309,7 +5311,7 @@ packages:
       '@storybook/core-events': 7.0.0-beta.3
       '@storybook/csf': 0.0.2-next.8
       '@storybook/csf-tools': 7.0.0-beta.3
-      '@storybook/docs-mdx': 0.0.1-next.5
+      '@storybook/docs-mdx': 0.0.1-next.6
       '@storybook/node-logger': 7.0.0-beta.3
       '@storybook/preview-api': 7.0.0-beta.3
       '@storybook/telemetry': 7.0.0-beta.3_typescript@4.9.4
@@ -5395,8 +5397,8 @@ packages:
       type-fest: 2.19.0
     dev: true
 
-  /@storybook/docs-mdx/0.0.1-next.5:
-    resolution: {integrity: sha512-EowXFPq4TBZQguKCdU8y7EzpuSv2vSu5gy7pgF/1P5mq7LG9h8YIrerOW9DL4zfp9E0GHIWlSXR5KuFIqqKc/Q==}
+  /@storybook/docs-mdx/0.0.1-next.6:
+    resolution: {integrity: sha512-DjoSIXADmLJtdroXAjUotFiZlcZ2usWhqrS7aeOtZs0DVR0Ws5WQjnwtpDUXt8gryTSd+OZJ0cNsDcqg4JDEvQ==}
     dev: true
 
   /@storybook/docs-tools/7.0.0-beta.3_typescript@4.9.4:
@@ -5459,6 +5461,10 @@ packages:
 
   /@storybook/mdx2-csf/1.0.0-next.4:
     resolution: {integrity: sha512-nvRgYdpYvXsvSgCzKc4LQA1JxtJzmv47IsFAsh1rTz5FoHyK8watLU2WqX9T4w52fpFXBHx7RwGEsCRt0XgZlQ==}
+    dev: true
+
+  /@storybook/mdx2-csf/1.0.0-next.5:
+    resolution: {integrity: sha512-02w0sgGZaK1agT050yCVhJ+o4rLHANWvLKWjQjeAsYbjneLC5ITt+3GDB4jRiWwJboZ8dHW1fGSK1Vg5fA34aQ==}
     dev: true
 
   /@storybook/node-logger/7.0.0-beta.3:
@@ -17441,10 +17447,12 @@ packages:
       - ts-node
     dev: true
 
-  /tailwindcss/3.2.4_ts-node@10.9.1:
+  /tailwindcss/3.2.4_aesdjsunmf4wiehhujt67my7tu:
     resolution: {integrity: sha512-AhwtHCKMtR71JgeYDaswmZXhPcW9iuI9Sp2LvZPo9upDZ7231ZJ7eA9RaURbhpXGVlrjX4cFNlB4ieTetEb7hQ==}
     engines: {node: '>=12.13.0'}
     hasBin: true
+    peerDependencies:
+      postcss: ^8.0.9
     dependencies:
       arg: 5.0.2
       chokidar: 3.5.3
