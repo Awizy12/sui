@@ -44,6 +44,10 @@ const textStyles = cva([], {
             true: 'italic',
             false: '',
         },
+        truncate: {
+            true: 'truncate',
+            false: '',
+        },
         mono: {
             true: 'font-mono',
             false: 'font-sans',
